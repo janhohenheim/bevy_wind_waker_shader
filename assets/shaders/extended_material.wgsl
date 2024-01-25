@@ -33,8 +33,8 @@ fn fragment(
     var pbr_input = pbr_input_from_standard_material(in, is_front);
 
     // we can optionally modify the input before lighting and alpha_discard is applied
+    // remove texture
     let texture = pbr_input.material.base_color;
-    // set color to white
     pbr_input.material.base_color = vec4<f32>(1.0, 1.0, 1.0, 1.0);
 
     // alpha discard
@@ -49,8 +49,13 @@ fn fragment(
     out.color = apply_pbr_lighting(pbr_input);
 
     // we can optionally modify the lit color before post-processing is applied
-    // out.color = vec4<f32>(vec4<u32>(out.color * f32(my_extended_material.quantize_steps))) / f32(my_extended_material.quantize_steps);
-    //  material.color * textureSample(base_color_texture, base_color_sampler, mesh.uv) * COLOR_MULTIPLIER;
+    // sample mask at the current fragment's intensity as u and the v as 0
+    let uv = vec2<f32>(out.color.r, 0.0);
+    let mask = textureSample(mask, mask_sampler, uv);
+    // apply toon mask
+    out.color = out.color * mask;
+    // Reapply texture
+    out.color = out.color * texture;
 
     // apply in-shader post processing (fog, alpha-premultiply, and also tonemapping, debanding if the camera is non-hdr)
     // note this does not include fullscreen postprocessing effects like bloom.
