@@ -1,6 +1,7 @@
 #import bevy_pbr::{
     pbr_fragment::pbr_input_from_standard_material,
     pbr_functions::alpha_discard,
+    mesh_view_bindings as view_bindings,
 }
 
 #ifdef PREPASS_PIPELINE
@@ -49,7 +50,7 @@ fn fragment(
     out.color = apply_pbr_lighting(pbr_input);
 
     // we can optionally modify the lit color before post-processing is applied
-
+    // Source for cel shading: https://www.youtube.com/watch?v=mnxs6CR6Zrk]
     // sample mask at the current fragment's intensity as u to get the cutoff
     let uv = vec2<f32>(out.color.r, 0.0);
     let mask = textureSample(mask, mask_sampler, uv);
@@ -58,8 +59,14 @@ fn fragment(
     // apply toon tone (values taken from palette_reference.png)
     let light_tone = vec4<f32>(254.0, 254.0, 254.0, 255.0) / 255.0;
     let dark_tone = vec4<f32>(163.0, 152.0, 146.0, 255.0) / 255.0;
-    let tone = mix(dark_tone, light_tone, out.color);
-    out.color = tone;
+    out.color = mix(dark_tone, light_tone, out.color);
+
+    // apply rim highlights. Inspired by Breath of the Wild. (https://www.youtube.com/watch?v=By7qcgaqGI4)
+    let eye = normalize(view_bindings::view.world_position.xyz - in.world_position.xyz);
+    let rim = 1.0 - dot(eye, in.world_normal);
+    let rim_factor = rim;
+    let rim_color = vec4<f32>(1.0, 1.0, 1.0, 1.0);
+    out.color = mix(out.color, rim_color, rim_factor);
 
     // Reapply texture
     out.color = out.color * texture;

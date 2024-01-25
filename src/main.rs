@@ -13,6 +13,7 @@ fn main() {
         .add_plugins(MaterialPlugin::<
             ExtendedMaterial<StandardMaterial, MyExtension>,
         >::default())
+        .insert_resource(ClearColor(Color::SEA_GREEN))
         .add_systems(Startup, setup)
         .add_systems(Update, (rotate_things, customize_scene_materials))
         .run();
