@@ -49,17 +49,24 @@ fn fragment(
     out.color = apply_pbr_lighting(pbr_input);
 
     // we can optionally modify the lit color before post-processing is applied
-    // sample mask at the current fragment's intensity as u and the v as 0
+
+    // sample mask at the current fragment's intensity as u to get the cutoff
     let uv = vec2<f32>(out.color.r, 0.0);
     let mask = textureSample(mask, mask_sampler, uv);
-    // apply toon mask
     out.color = out.color * mask;
+
+    // apply toon tone (values taken from palette_reference.png)
+    let light_tone = vec4<f32>(254.0, 254.0, 254.0, 255.0) / 255.0;
+    let dark_tone = vec4<f32>(163.0, 152.0, 146.0, 255.0) / 255.0;
+    let tone = mix(dark_tone, light_tone, out.color);
+    out.color = tone;
+
     // Reapply texture
     out.color = out.color * texture;
 
     // apply in-shader post processing (fog, alpha-premultiply, and also tonemapping, debanding if the camera is non-hdr)
     // note this does not include fullscreen postprocessing effects like bloom.
-     out.color = main_pass_post_lighting_processing(pbr_input, out.color);
+    out.color = main_pass_post_lighting_processing(pbr_input, out.color);
 
     // we can optionally modify the final result here
 #endif
