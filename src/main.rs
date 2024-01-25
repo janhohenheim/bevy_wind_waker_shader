@@ -11,7 +11,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(MaterialPlugin::<
-            ExtendedMaterial<StandardMaterial, MyExtension>,
+            ExtendedMaterial<StandardMaterial, ToonShader>,
         >::default())
         .insert_resource(ClearColor(Color::SEA_GREEN))
         .add_systems(Startup, setup)
@@ -31,7 +31,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             },
             ..default()
         },
-        CustomizeMaterial,
+        ApplyToonShader,
     ));
 
     // light
@@ -58,42 +58,38 @@ fn rotate_things(mut q: Query<&mut Transform, With<Rotate>>, time: Res<Time>) {
 }
 
 #[derive(Asset, AsBindGroup, Reflect, Debug, Clone)]
-struct MyExtension {
-    // We need to ensure that the bindings of the base material and the extension do not conflict,
-    // so we start from binding slot 100, leaving slots 0-99 for the base material.
-    #[uniform(100)]
-    quantize_steps: u32,
-    #[texture(101)]
-    #[sampler(102)]
+struct ToonShader {
+    #[texture(100)]
+    #[sampler(101)]
     mask: Option<Handle<Image>>,
 }
 
-impl MaterialExtension for MyExtension {
+impl MaterialExtension for ToonShader {
     fn fragment_shader() -> ShaderRef {
-        "shaders/extended_material.wgsl".into()
+        "shaders/toon_shader.wgsl".into()
     }
 
     fn deferred_fragment_shader() -> ShaderRef {
-        "shaders/extended_material.wgsl".into()
+        "shaders/toon_shader.wgsl".into()
     }
 }
 
 #[derive(Component)]
-struct CustomizeMaterial;
+struct ApplyToonShader;
 
 /// Source: https://github.com/bevyengine/bevy/discussions/8533#discussioncomment-5787519
 fn customize_scene_materials(
-    unloaded_instances: Query<(Entity, &SceneInstance), With<CustomizeMaterial>>,
+    unloaded_instances: Query<(Entity, &SceneInstance), With<ApplyToonShader>>,
     handles: Query<(Entity, &Handle<StandardMaterial>)>,
     pbr_materials: Res<Assets<StandardMaterial>>,
     scene_manager: Res<SceneSpawner>,
-    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, MyExtension>>>,
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, ToonShader>>>,
     mut cmds: Commands,
     asset_server: Res<AssetServer>,
 ) {
     for (entity, instance) in unloaded_instances.iter() {
         if scene_manager.instance_is_ready(**instance) {
-            cmds.entity(entity).remove::<CustomizeMaterial>();
+            cmds.entity(entity).remove::<ApplyToonShader>();
         }
         // Iterate over all entities in scene (once it's loaded)
         let handles = handles.iter_many(scene_manager.iter_instance_entities(**instance));
@@ -103,8 +99,7 @@ fn customize_scene_materials(
             };
             let custom = materials.add(ExtendedMaterial {
                 base: material.clone(),
-                extension: MyExtension {
-                    quantize_steps: 3,
+                extension: ToonShader {
                     mask: Some(asset_server.load("textures/ZAtoon.png")),
                 },
             });

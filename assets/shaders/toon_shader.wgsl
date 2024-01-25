@@ -16,14 +16,8 @@
 }
 #endif
 
-struct MyExtendedMaterial {
-    quantize_steps: u32,
-}
-
-@group(1) @binding(100)
-var<uniform> my_extended_material: MyExtendedMaterial;
-@group(1) @binding(101) var mask: texture_2d<f32>;
-@group(1) @binding(102) var mask_sampler: sampler;
+@group(1) @binding(100) var mask: texture_2d<f32>;
+@group(1) @binding(101) var mask_sampler: sampler;
 
 @fragment
 fn fragment(
