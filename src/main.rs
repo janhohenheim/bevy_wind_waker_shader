@@ -1,7 +1,8 @@
 //! Demonstrates using a custom extension to the `StandardMaterial` to modify the results of the builtin pbr shader.
 
+use bevy::scene::SceneInstance;
 use bevy::{
-    pbr::{ExtendedMaterial, MaterialExtension, OpaqueRendererMethod},
+    pbr::{ExtendedMaterial, MaterialExtension},
     prelude::*,
     render::render_resource::*,
 };
@@ -13,46 +14,24 @@ fn main() {
             ExtendedMaterial<StandardMaterial, MyExtension>,
         >::default())
         .add_systems(Startup, setup)
-        .add_systems(Update, rotate_things)
+        .add_systems(Update, (rotate_things, customize_scene_materials))
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, MyExtension>>>,
-
-    asset_server: Res<AssetServer>,
-) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // sphere
-    commands.spawn(MaterialMeshBundle {
-        mesh: meshes.add(
-            Mesh::try_from(shape::Icosphere {
-                radius: 1.0,
-                subdivisions: 5,
-            })
-            .unwrap(),
-        ),
-        transform: Transform::from_xyz(0.0, 0.5, 0.0),
-        material: materials.add(ExtendedMaterial {
-            base: StandardMaterial {
-                base_color: Color::RED,
-                // can be used in forward or deferred mode.
-                opaque_render_method: OpaqueRendererMethod::Auto,
-                // in deferred mode, only the PbrInput can be modified (uvs, color and other material properties),
-                // in forward mode, the output can also be modified after lighting is applied.
-                // see the fragment shader `extended_material.wgsl` for more info.
-                // Note: to run in deferred mode, you must also add a `DeferredPrepass` component to the camera and either
-                // change the above to `OpaqueRendererMethod::Deferred` or add the `DefaultOpaqueRendererMethod` resource.
-                ..Default::default()
+    commands.spawn((
+        SceneBundle {
+            scene: asset_server.load("models/FlightHelmet/FlightHelmet.gltf#Scene0"),
+            transform: Transform {
+                translation: Vec3::new(0.0, -1.0, 0.0),
+                scale: Vec3::splat(3.0),
+                ..default()
             },
-            extension: MyExtension {
-                quantize_steps: 3,
-                mask: Some(asset_server.load("textures/ZAtoon.png")),
-            },
-        }),
-        ..default()
-    });
+            ..default()
+        },
+        CustomizeMaterial,
+    ));
 
     // light
     commands.spawn((PointLightBundle::default(), Rotate));
@@ -95,5 +74,42 @@ impl MaterialExtension for MyExtension {
 
     fn deferred_fragment_shader() -> ShaderRef {
         "shaders/extended_material.wgsl".into()
+    }
+}
+
+#[derive(Component)]
+struct CustomizeMaterial;
+
+/// Source: https://github.com/bevyengine/bevy/discussions/8533#discussioncomment-5787519
+fn customize_scene_materials(
+    unloaded_instances: Query<(Entity, &SceneInstance), With<CustomizeMaterial>>,
+    handles: Query<(Entity, &Handle<StandardMaterial>)>,
+    pbr_materials: Res<Assets<StandardMaterial>>,
+    scene_manager: Res<SceneSpawner>,
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, MyExtension>>>,
+    mut cmds: Commands,
+    asset_server: Res<AssetServer>,
+) {
+    for (entity, instance) in unloaded_instances.iter() {
+        if scene_manager.instance_is_ready(**instance) {
+            cmds.entity(entity).remove::<CustomizeMaterial>();
+        }
+        // Iterate over all entities in scene (once it's loaded)
+        let handles = handles.iter_many(scene_manager.iter_instance_entities(**instance));
+        for (entity, material_handle) in handles {
+            let Some(material) = pbr_materials.get(material_handle) else {
+                continue;
+            };
+            let custom = materials.add(ExtendedMaterial {
+                base: material.clone(),
+                extension: MyExtension {
+                    quantize_steps: 3,
+                    mask: Some(asset_server.load("textures/ZAtoon.png")),
+                },
+            });
+            cmds.entity(entity)
+                .insert(custom)
+                .remove::<Handle<StandardMaterial>>();
+        }
     }
 }

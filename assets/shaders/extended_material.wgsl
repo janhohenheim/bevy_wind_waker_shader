@@ -52,7 +52,7 @@ fn fragment(
 
     // apply in-shader post processing (fog, alpha-premultiply, and also tonemapping, debanding if the camera is non-hdr)
     // note this does not include fullscreen postprocessing effects like bloom.
-    // out.color = main_pass_post_lighting_processing(pbr_input, out.color);
+     out.color = main_pass_post_lighting_processing(pbr_input, out.color);
 
     // we can optionally modify the final result here
     // out.color = out.color * 2.0;
