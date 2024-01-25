@@ -33,7 +33,9 @@ fn fragment(
     var pbr_input = pbr_input_from_standard_material(in, is_front);
 
     // we can optionally modify the input before lighting and alpha_discard is applied
-    pbr_input.material.base_color.b = pbr_input.material.base_color.r;
+    let texture = pbr_input.material.base_color;
+    // set color to white
+    pbr_input.material.base_color = vec4<f32>(1.0, 1.0, 1.0, 1.0);
 
     // alpha discard
     pbr_input.material.base_color = alpha_discard(pbr_input.material, pbr_input.material.base_color);
@@ -55,7 +57,6 @@ fn fragment(
      out.color = main_pass_post_lighting_processing(pbr_input, out.color);
 
     // we can optionally modify the final result here
-    // out.color = out.color * 2.0;
 #endif
 
     return out;
