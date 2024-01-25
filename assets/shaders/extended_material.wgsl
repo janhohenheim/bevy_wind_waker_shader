@@ -21,6 +21,8 @@ struct MyExtendedMaterial {
 
 @group(1) @binding(100)
 var<uniform> my_extended_material: MyExtendedMaterial;
+@group(1) @binding(101) var mask: texture_2d<f32>;
+@group(1) @binding(102) var mask_sampler: sampler;
 
 @fragment
 fn fragment(
@@ -45,14 +47,15 @@ fn fragment(
     out.color = apply_pbr_lighting(pbr_input);
 
     // we can optionally modify the lit color before post-processing is applied
-    out.color = vec4<f32>(vec4<u32>(out.color * f32(my_extended_material.quantize_steps))) / f32(my_extended_material.quantize_steps);
+    // out.color = vec4<f32>(vec4<u32>(out.color * f32(my_extended_material.quantize_steps))) / f32(my_extended_material.quantize_steps);
+    //  material.color * textureSample(base_color_texture, base_color_sampler, mesh.uv) * COLOR_MULTIPLIER;
 
     // apply in-shader post processing (fog, alpha-premultiply, and also tonemapping, debanding if the camera is non-hdr)
     // note this does not include fullscreen postprocessing effects like bloom.
-    out.color = main_pass_post_lighting_processing(pbr_input, out.color);
+    // out.color = main_pass_post_lighting_processing(pbr_input, out.color);
 
     // we can optionally modify the final result here
-    out.color = out.color * 2.0;
+    // out.color = out.color * 2.0;
 #endif
 
     return out;

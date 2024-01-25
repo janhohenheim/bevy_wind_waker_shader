@@ -21,6 +21,8 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, MyExtension>>>,
+
+    asset_server: Res<AssetServer>,
 ) {
     // sphere
     commands.spawn(MaterialMeshBundle {
@@ -44,7 +46,10 @@ fn setup(
                 // change the above to `OpaqueRendererMethod::Deferred` or add the `DefaultOpaqueRendererMethod` resource.
                 ..Default::default()
             },
-            extension: MyExtension { quantize_steps: 3 },
+            extension: MyExtension {
+                quantize_steps: 3,
+                mask: Some(asset_server.load("textures/ZAtoon.png")),
+            },
         }),
         ..default()
     });
@@ -78,6 +83,9 @@ struct MyExtension {
     // so we start from binding slot 100, leaving slots 0-99 for the base material.
     #[uniform(100)]
     quantize_steps: u32,
+    #[texture(101)]
+    #[sampler(102)]
+    mask: Option<Handle<Image>>,
 }
 
 impl MaterialExtension for MyExtension {
