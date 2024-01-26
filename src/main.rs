@@ -13,9 +13,11 @@ fn main() {
         .add_plugins(MaterialPlugin::<
             ExtendedMaterial<StandardMaterial, ToonShader>,
         >::default())
-        .insert_resource(ClearColor(Color::SEA_GREEN))
         .add_systems(Startup, setup)
-        .add_systems(Update, (rotate_things, customize_scene_materials))
+        .add_systems(
+            Update,
+            (rotate_things, customize_scene_materials, change_color),
+        )
         .run();
 }
 
@@ -31,11 +33,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             },
             ..default()
         },
-        ToonShaderConfig {
-            highlight_color: Color::rgb_u8(254, 254, 254),
-            shadow_color: Color::rgb_u8(163, 152, 146),
-            rim_color: Color::WHITE,
-        },
+        ToonShaderConfig::default(),
     ));
 
     // light
@@ -87,6 +85,16 @@ struct ToonShaderConfig {
     rim_color: Color,
 }
 
+impl Default for ToonShaderConfig {
+    fn default() -> Self {
+        Self {
+            highlight_color: Color::hex("FEFEFE").unwrap(),
+            shadow_color: Color::hex("A1958F").unwrap(),
+            rim_color: Color::WHITE,
+        }
+    }
+}
+
 /// Source: https://github.com/bevyengine/bevy/discussions/8533#discussioncomment-5787519
 fn customize_scene_materials(
     unloaded_instances: Query<(Entity, &SceneInstance, &ToonShaderConfig)>,
@@ -119,4 +127,37 @@ fn customize_scene_materials(
                 .remove::<Handle<StandardMaterial>>();
         }
     }
+}
+
+fn change_color(
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, ToonShader>>>,
+    time: Res<Time>,
+    mut clear_color: ResMut<ClearColor>,
+) {
+    for (_, material) in materials.iter_mut() {
+        let config = &mut material.extension.config;
+        let highlights = [Color::hex("FEFEFE").unwrap(), Color::hex("8298AF").unwrap()];
+        let shadows = [Color::hex("A1958F").unwrap(), Color::hex("5C6C96").unwrap()];
+        let backgrounds = [Color::CYAN, Color::MIDNIGHT_BLUE];
+        let frequency = 0.1;
+
+        let lerp = (time.elapsed_seconds() * std::f32::consts::PI * frequency).sin();
+        let lerp = lerp * lerp;
+        let highlight_color = mix_colors(highlights[0], highlights[1], lerp);
+        let shadow_color = mix_colors(shadows[0], shadows[1], lerp);
+        let background_color = mix_colors(backgrounds[0], backgrounds[1], lerp);
+
+        config.highlight_color = highlight_color;
+        config.shadow_color = shadow_color;
+        config.rim_color = Color::WHITE;
+        clear_color.0 = background_color;
+    }
+}
+
+fn mix_colors(a: Color, b: Color, t: f32) -> Color {
+    Color::rgb(
+        a.r() * (1.0 - t) + b.r() * t,
+        a.g() * (1.0 - t) + b.g() * t,
+        a.b() * (1.0 - t) + b.b() * t,
+    )
 }
