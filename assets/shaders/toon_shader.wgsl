@@ -65,7 +65,7 @@ fn fragment(
     // apply rim highlights. Inspired by Breath of the Wild. (https://www.youtube.com/watch?v=By7qcgaqGI4)
     let eye = normalize(view_bindings::view.world_position.xyz - in.world_position.xyz);
     let rim = 1.0 - dot(eye, in.world_normal);
-    let rim_factor = rim;
+    let rim_factor = rim * rim;
     out.color = mix(out.color, toon.rim_color, rim_factor);
 
     // Reapply texture
