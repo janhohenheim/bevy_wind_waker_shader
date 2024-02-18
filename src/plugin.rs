@@ -1,10 +1,10 @@
 use crate::{
-    components::{WindWakerShader, WindWakerShaderMaterial, SHADER_HANDLE, TEXTURE_HANDLE},
+    components::{WindWakerShader, SHADER_HANDLE, TEXTURE_HANDLE},
     systems::{customize_scene_materials, customize_standard_materials},
 };
 use bevy::app::{App, Plugin, Update};
 use bevy::asset::{load_internal_asset, Assets};
-use bevy::pbr::{ExtendedMaterial, MaterialPlugin, StandardMaterial};
+use bevy::pbr::MaterialPlugin;
 use bevy::prelude::{Image, Shader};
 use bevy::render::render_asset::RenderAssetUsages;
 use bevy::render::texture::{CompressedImageFormats, ImageSampler, ImageType};
@@ -40,14 +40,11 @@ impl Plugin for WindWakerShaderPlugin {
             .resource_mut::<Assets<Image>>()
             .insert(TEXTURE_HANDLE, img);
 
-        app.add_plugins(MaterialPlugin::<
-            ExtendedMaterial<StandardMaterial, WindWakerShaderMaterial>,
-        >::default())
+        app.add_plugins(MaterialPlugin::<crate::ExtendedMaterial>::default())
             .add_systems(
                 Update,
                 (customize_scene_materials, customize_standard_materials),
             )
-            .register_type::<WindWakerShader>()
-            .register_type::<WindWakerShaderMaterial>();
+            .register_type::<WindWakerShader>();
     }
 }

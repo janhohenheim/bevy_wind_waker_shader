@@ -1,4 +1,4 @@
-use crate::{WindWakerShader, WindWakerShaderMaterial};
+use crate::WindWakerShader;
 use bevy::asset::{Assets, Handle};
 use bevy::pbr::{ExtendedMaterial, StandardMaterial};
 use bevy::prelude::{Commands, Entity, Query, Res, ResMut, Scene, SceneSpawner, With, Without};
@@ -13,7 +13,7 @@ pub(crate) fn customize_scene_materials(
     handles: Query<(Entity, &Handle<StandardMaterial>)>,
     pbr_materials: Res<Assets<StandardMaterial>>,
     scene_manager: Res<SceneSpawner>,
-    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShaderMaterial>>>,
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShader>>>,
     mut cmds: Commands,
 ) {
     for (entity, instance, config) in unloaded_instances.iter() {
@@ -29,7 +29,7 @@ pub(crate) fn customize_scene_materials(
                 };
                 let toon_material = materials.add(ExtendedMaterial {
                     base: material.clone(),
-                    extension: WindWakerShaderMaterial::from(config.clone()),
+                    extension: WindWakerShader::from(config.clone()),
                 });
                 cmds.entity(entity)
                     .insert(toon_material)
@@ -44,7 +44,7 @@ pub(crate) fn customize_standard_materials(
         (Entity, &Handle<StandardMaterial>, &WindWakerShader),
         Without<Handle<Scene>>,
     >,
-    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShaderMaterial>>>,
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShader>>>,
     pbr_materials: Res<Assets<StandardMaterial>>,
     mut cmds: Commands,
 ) {
@@ -54,7 +54,7 @@ pub(crate) fn customize_standard_materials(
         };
         let toon_material = materials.add(ExtendedMaterial {
             base: material.clone(),
-            extension: WindWakerShaderMaterial::from(config.clone()),
+            extension: WindWakerShader::from(config.clone()),
         });
         cmds.entity(entity)
             .insert(toon_material)

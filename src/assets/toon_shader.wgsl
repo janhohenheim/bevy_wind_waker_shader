@@ -16,15 +16,11 @@
 }
 #endif
 
-struct ToonShaderConfig {
-    highlight_color: vec4<f32>,
-    shadow_color: vec4<f32>,
-    rim_color: vec4<f32>,
-}
-
 @group(2) @binding(100) var mask: texture_2d<f32>;
 @group(2) @binding(101) var mask_sampler: sampler;
-@group(2) @binding(102) var<uniform> toon: ToonShaderConfig;
+@group(2) @binding(102) var<uniform> highlight_color: vec4<f32>;
+@group(2) @binding(103) var<uniform> shadow_color: vec4<f32>;
+@group(2) @binding(104) var<uniform> rim_color: vec4<f32>;
 
 @fragment
 fn fragment(
@@ -53,13 +49,13 @@ fn fragment(
     let mask = textureSample(mask, mask_sampler, uv);
     out.color = out.color * mask;
 
-    out.color = mix(toon.shadow_color, toon.highlight_color, out.color);
+    out.color = mix(shadow_color, highlight_color, out.color);
 
     // apply rim highlights. Inspired by Breath of the Wild: https://www.youtube.com/watch?v=By7qcgaqGI4
     let eye = normalize(view_bindings::view.world_position.xyz - in.world_position.xyz);
     let rim = 1.0 - dot(eye, in.world_normal);
     let rim_factor = rim * rim;
-    out.color = mix(out.color, toon.rim_color, rim_factor);
+    out.color = mix(out.color, rim_color, rim_factor);
 
     // Reapply texture
     out.color = out.color * texture;

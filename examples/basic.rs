@@ -21,7 +21,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             },
             ..default()
         },
-        WindWakerShader::default(),
+        WindWakerShaderBuilder::default().build(),
     ));
 
     // light
@@ -53,7 +53,7 @@ fn change_color(
     mut clear_color: ResMut<ClearColor>,
 ) {
     for (_, material) in materials.iter_mut() {
-        let config = &mut material.extension.config;
+        let toon_shader = &mut material.extension;
         let highlights = [Color::hex("FEFEFE").unwrap(), Color::hex("8298AF").unwrap()];
         let shadows = [Color::hex("A1958F").unwrap(), Color::hex("5C6C96").unwrap()];
         let backgrounds = [Color::CYAN, Color::MIDNIGHT_BLUE];
@@ -65,9 +65,9 @@ fn change_color(
         let shadow_color = mix_colors(shadows[0], shadows[1], lerp);
         let background_color = mix_colors(backgrounds[0], backgrounds[1], lerp);
 
-        config.highlight_color = highlight_color;
-        config.shadow_color = shadow_color;
-        config.rim_color = Color::WHITE;
+        toon_shader.highlight_color = highlight_color;
+        toon_shader.shadow_color = shadow_color;
+        toon_shader.rim_color = Color::WHITE;
         clear_color.0 = background_color;
     }
 }
