@@ -16,8 +16,9 @@ fn main() {
         .add_systems(Startup, setup)
         .add_systems(
             Update,
-            (rotate_things, customize_scene_materials, change_color),
+            (customize_scene_materials, customize_standard_materials),
         )
+        .add_systems(Update, (rotate_things, change_color))
         .run();
 }
 
@@ -97,7 +98,10 @@ impl Default for ToonShaderConfig {
 
 /// Source: https://github.com/bevyengine/bevy/discussions/8533#discussioncomment-5787519
 fn customize_scene_materials(
-    unloaded_instances: Query<(Entity, &SceneInstance, &ToonShaderConfig)>,
+    unloaded_instances: Query<
+        (Entity, Option<&SceneInstance>, &ToonShaderConfig),
+        With<Handle<Scene>>,
+    >,
     handles: Query<(Entity, &Handle<StandardMaterial>)>,
     pbr_materials: Res<Assets<StandardMaterial>>,
     scene_manager: Res<SceneSpawner>,
@@ -106,26 +110,55 @@ fn customize_scene_materials(
     asset_server: Res<AssetServer>,
 ) {
     for (entity, instance, config) in unloaded_instances.iter() {
-        if scene_manager.instance_is_ready(**instance) {
-            cmds.entity(entity).remove::<ToonShaderConfig>();
+        if let Some(instance) = instance {
+            if scene_manager.instance_is_ready(**instance) {
+                cmds.entity(entity).remove::<ToonShaderConfig>();
+            }
+            // Iterate over all entities in scene (once it's loaded)
+            let handles = handles.iter_many(scene_manager.iter_instance_entities(**instance));
+            for (entity, material_handle) in handles {
+                let Some(material) = pbr_materials.get(material_handle) else {
+                    continue;
+                };
+                let toon_material = materials.add(ExtendedMaterial {
+                    base: material.clone(),
+                    extension: ToonShader {
+                        mask: Some(asset_server.load("textures/ZAtoon.png")),
+                        config: config.clone(),
+                    },
+                });
+                cmds.entity(entity)
+                    .insert(toon_material)
+                    .remove::<Handle<StandardMaterial>>();
+            }
         }
-        // Iterate over all entities in scene (once it's loaded)
-        let handles = handles.iter_many(scene_manager.iter_instance_entities(**instance));
-        for (entity, material_handle) in handles {
-            let Some(material) = pbr_materials.get(material_handle) else {
-                continue;
-            };
-            let toon_material = materials.add(ExtendedMaterial {
-                base: material.clone(),
-                extension: ToonShader {
-                    mask: Some(asset_server.load("textures/ZAtoon.png")),
-                    config: config.clone(),
-                },
-            });
-            cmds.entity(entity)
-                .insert(toon_material)
-                .remove::<Handle<StandardMaterial>>();
-        }
+    }
+}
+
+fn customize_standard_materials(
+    with_material: Query<
+        (Entity, &Handle<StandardMaterial>, &ToonShaderConfig),
+        Without<Handle<Scene>>,
+    >,
+    mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, ToonShader>>>,
+    pbr_materials: Res<Assets<StandardMaterial>>,
+    mut cmds: Commands,
+    asset_server: Res<AssetServer>,
+) {
+    for (entity, material_handle, config) in with_material.iter() {
+        let Some(material) = pbr_materials.get(material_handle) else {
+            continue;
+        };
+        let toon_material = materials.add(ExtendedMaterial {
+            base: material.clone(),
+            extension: ToonShader {
+                mask: Some(asset_server.load("textures/ZAtoon.png")),
+                config: config.clone(),
+            },
+        });
+        cmds.entity(entity)
+            .insert(toon_material)
+            .remove::<Handle<StandardMaterial>>();
     }
 }
 
