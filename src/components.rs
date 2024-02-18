@@ -1,12 +1,12 @@
 use bevy::asset::{Asset, Handle};
-use bevy::pbr::{ExtendedMaterial, MaterialExtension, StandardMaterial};
+use bevy::pbr::{MaterialExtension, StandardMaterial};
 use bevy::prelude::{Color, Component, Image, Reflect, Shader};
 use bevy::render::render_resource::{AsBindGroup, ShaderRef, ShaderType};
 
 pub(crate) const SHADER_HANDLE: Handle<Shader> = Handle::weak_from_u128(4_326_875_112_478_868_553);
 pub(crate) const TEXTURE_HANDLE: Handle<Image> = Handle::weak_from_u128(8_324_623_845_322_188_856);
 
-pub type ExtendedMaterial = ExtendedMaterial<StandardMaterial, WindWakerShaderMaterial>;
+pub type ExtendedMaterial = bevy::pbr::ExtendedMaterial<StandardMaterial, WindWakerShaderMaterial>;
 
 #[derive(Asset, AsBindGroup, Reflect, Debug, Clone)]
 pub struct WindWakerShaderMaterial {

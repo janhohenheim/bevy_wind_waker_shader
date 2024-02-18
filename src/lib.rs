@@ -1,5 +1,3 @@
-use bevy::{pbr::MaterialExtension, prelude::*, render::render_resource::*};
-
 pub mod prelude {
     pub use crate::{WindWakerShader, WindWakerShaderPlugin};
 }

@@ -3,7 +3,7 @@ use crate::{
     systems::{customize_scene_materials, customize_standard_materials},
 };
 use bevy::app::{App, Plugin, Update};
-use bevy::asset::{load_internal_asset, Assets, Handle};
+use bevy::asset::{load_internal_asset, Assets};
 use bevy::pbr::{ExtendedMaterial, MaterialPlugin, StandardMaterial};
 use bevy::prelude::{Image, Shader};
 use bevy::render::render_asset::RenderAssetUsages;
