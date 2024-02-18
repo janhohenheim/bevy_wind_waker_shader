@@ -48,7 +48,7 @@ fn rotate_things(mut q: Query<&mut Transform, With<Rotate>>, time: Res<Time>) {
 }
 
 fn change_color(
-    mut materials: ResMut<Assets<bevy_wind_waker_shader::Material>>,
+    mut materials: ResMut<Assets<bevy_wind_waker_shader::ExtendedMaterial>>,
     time: Res<Time>,
     mut clear_color: ResMut<ClearColor>,
 ) {
