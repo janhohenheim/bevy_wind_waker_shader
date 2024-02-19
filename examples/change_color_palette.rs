@@ -1,3 +1,4 @@
+use bevy::core_pipeline::fxaa::Fxaa;
 use bevy::prelude::*;
 use bevy_wind_waker_shader::prelude::*;
 
@@ -6,6 +7,7 @@ fn main() {
         .add_plugins((DefaultPlugins, WindWakerShaderPlugin::default()))
         .add_systems(Startup, setup)
         .add_systems(Update, change_color)
+        .insert_resource(Msaa::default())
         .run();
 }
 
@@ -50,10 +52,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 
     // camera
-    commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
-        ..default()
-    });
+    commands.spawn((
+        Camera3dBundle {
+            transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+            ..default()
+        },
+        Fxaa::default(),
+    ));
 }
 
 fn change_color(

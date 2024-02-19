@@ -46,15 +46,13 @@ fn fragment(
     // Source for cel shading: https://www.youtube.com/watch?v=mnxs6CR6Zrk]
     // sample mask at the current fragment's intensity as u to get the cutoff
     let uv = vec2<f32>(out.color.r, 0.0);
-    let mask = textureSample(mask, mask_sampler, uv);
-    out.color = out.color * mask;
-
-    out.color = mix(shadow_color, highlight_color, out.color);
+    let toon_light = textureSample(mask, mask_sampler, uv);
+    out.color = mix(shadow_color, highlight_color, toon_light);
 
     // apply rim highlights. Inspired by Breath of the Wild: https://www.youtube.com/watch?v=By7qcgaqGI4
     let eye = normalize(view_bindings::view.world_position.xyz - in.world_position.xyz);
-    let rim = 1.0 - dot(eye, in.world_normal);
-    let rim_factor = rim * rim;
+    let rim = 1.0 - abs(dot(eye, in.world_normal));
+    let rim_factor = rim * rim * rim * rim;
     out.color = mix(out.color, rim_color, rim_factor);
 
     // Reapply texture

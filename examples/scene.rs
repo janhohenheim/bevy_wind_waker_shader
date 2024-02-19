@@ -6,6 +6,7 @@ fn main() {
         .add_plugins((DefaultPlugins, WindWakerShaderPlugin::default()))
         .add_systems(Startup, setup)
         .add_systems(Update, rotate_light)
+        .insert_resource(Msaa::default())
         .run();
 }
 
@@ -47,10 +48,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(PointLightBundle::default());
 
     // camera
-    commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
-        ..default()
-    });
+    commands.spawn((
+        Camera3dBundle {
+            transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+            ..default()
+        },
+        Fxaa::default(),
+    ));
 }
 
 fn rotate_light(mut q: Query<&mut Transform, With<PointLight>>, time: Res<Time>) {
