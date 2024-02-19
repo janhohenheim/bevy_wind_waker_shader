@@ -1,5 +1,6 @@
 
 # Wind Waker Shader
+
 [![crates.io](https://img.shields.io/crates/v/bevy_wind_waker_shader)](https://crates.io/crates/bevy_wind_waker_shader)
 [![docs.rs](https://docs.rs/bevy_wind_waker_shader/badge.svg)](https://docs.rs/bevy_wind_waker_shader)
 
@@ -9,12 +10,16 @@ The main code is taken from the ideas presented in [this video](https://www.yout
 
 ## Showcase
 
-Daylight:
+Sphere:
+
+![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/befb4618-4a68-4f83-a019-d07362e77b43)
+
+Scenes in daylight:
 
 ![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/ad489828-35a9-4e35-8c0b-a4ecf57d8296)
 
 
-Night:
+Scenes at night:
 
 ![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/140684a4-bd7b-49fe-9af8-837ccfbbd6b5)
 
