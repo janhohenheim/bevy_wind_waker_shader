@@ -6,6 +6,21 @@
 A shader that looks like the one used for characters in The Legend of Zelda: The Wind Waker. 
 The main code is taken from the ideas presented in [this video](https://www.youtube.com/watch?v=mnxs6CR6Zrk).
 
+
+## Showcase
+
+Daylight:
+
+![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/ad489828-35a9-4e35-8c0b-a4ecf57d8296)
+
+
+Night:
+
+![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/140684a4-bd7b-49fe-9af8-837ccfbbd6b5)
+
+
+## Functionality
+
 The shader has the following properties:
 - Is is a toon shader with only two colors: the highlight and the shadow.
 - The color palette used is based on the time of day and the weather.
