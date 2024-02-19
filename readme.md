@@ -17,7 +17,7 @@ Sphere:
 
 Scene throughout day:
 
-https://github.com/janhohenheim/bevy_wind_waker_shader/assets/9047632/9668b849-cd2d-4e0f-a302-6638e5e03863
+<https://github.com/janhohenheim/bevy_wind_waker_shader/assets/9047632/9668b849-cd2d-4e0f-a302-6638e5e03863>
 
 
 Scene in daylight:
