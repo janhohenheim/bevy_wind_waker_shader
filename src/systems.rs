@@ -16,7 +16,7 @@ pub(crate) fn customize_scene_materials(
     mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShader>>>,
     mut cmds: Commands,
 ) {
-    for (entity, instance, config) in unloaded_instances.iter() {
+    for (entity, instance, shader) in unloaded_instances.iter() {
         if let Some(instance) = instance {
             if scene_manager.instance_is_ready(**instance) {
                 cmds.entity(entity).remove::<WindWakerShader>();
@@ -29,7 +29,7 @@ pub(crate) fn customize_scene_materials(
                 };
                 let toon_material = materials.add(ExtendedMaterial {
                     base: material.clone(),
-                    extension: WindWakerShader::from(config.clone()),
+                    extension: shader.clone(),
                 });
                 cmds.entity(entity)
                     .insert(toon_material)
@@ -48,13 +48,13 @@ pub(crate) fn customize_standard_materials(
     pbr_materials: Res<Assets<StandardMaterial>>,
     mut cmds: Commands,
 ) {
-    for (entity, material_handle, config) in with_material.iter() {
+    for (entity, material_handle, shader) in with_material.iter() {
         let Some(material) = pbr_materials.get(material_handle) else {
             continue;
         };
         let toon_material = materials.add(ExtendedMaterial {
             base: material.clone(),
-            extension: WindWakerShader::from(config.clone()),
+            extension: shader.clone(),
         });
         cmds.entity(entity)
             .insert(toon_material)
