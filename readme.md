@@ -34,6 +34,7 @@ Scene at night:
 
 The shader has the following properties:
 - It is a toon shader with only two colors: the highlight and the shadow.
+- The edge between the two colors is not entirely hard but has an ever-so-slight gradient.
 - The color palette used is based on the time of day and the weather.
 - The model has a rim highlight on the edge to make it pop.
 
