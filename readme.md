@@ -14,12 +14,18 @@ Sphere:
 
 ![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/befb4618-4a68-4f83-a019-d07362e77b43)
 
-Scenes in daylight:
+
+Scene throughout day:
+
+https://github.com/janhohenheim/bevy_wind_waker_shader/assets/9047632/9668b849-cd2d-4e0f-a302-6638e5e03863
+
+
+Scene in daylight:
 
 ![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/ad489828-35a9-4e35-8c0b-a4ecf57d8296)
 
 
-Scenes at night:
+Scene at night:
 
 ![image](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/140684a4-bd7b-49fe-9af8-837ccfbbd6b5)
 
