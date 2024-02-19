@@ -12,7 +12,7 @@ The main code is taken from the ideas presented in [this video](https://www.yout
 
 Sphere:
 
-![Sphere](https://github.com/janhohenheim/wind-waker-shader/assets/9047632/befb4618-4a68-4f83-a019-d07362e77b43)
+![Sphere](https://github.com/janhohenheim/bevy_wind_waker_shader/assets/9047632/c5493f3e-fd09-4795-b62c-aa6b33a23089)
 
 
 Scene throughout day:
