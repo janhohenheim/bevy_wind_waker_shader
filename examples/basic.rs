@@ -9,16 +9,16 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // sphere
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    // objects
     commands.spawn((
-        SceneBundle {
-            scene: asset_server.load("FlightHelmet/FlightHelmet.gltf#Scene0"),
-            transform: Transform {
-                translation: Vec3::new(0.0, -1.0, 0.0),
-                scale: Vec3::splat(3.0),
-                ..default()
-            },
+        PbrBundle {
+            mesh: meshes.add(Sphere::default()),
+            material: materials.add(Color::WHITE),
             ..default()
         },
         WindWakerShaderBuilder::default()

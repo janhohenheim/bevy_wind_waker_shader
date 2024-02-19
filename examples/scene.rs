@@ -5,7 +5,7 @@ fn main() {
     App::new()
         .add_plugins((DefaultPlugins, WindWakerShaderPlugin::default()))
         .add_systems(Startup, setup)
-        .add_systems(Update, change_color)
+        .add_systems(Update, rotate_light)
         .run();
 }
 
@@ -44,10 +44,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 
     // light
-    commands.spawn(PointLightBundle {
-        transform: Transform::from_xyz(2.0, 0.5, 2.0),
-        ..default()
-    });
+    commands.spawn(PointLightBundle::default());
 
     // camera
     commands.spawn(Camera3dBundle {
@@ -56,25 +53,12 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 }
 
-fn change_color(
-    models: Query<&Handle<bevy_wind_waker_shader::ExtendedMaterial>>,
-    mut materials: ResMut<Assets<bevy_wind_waker_shader::ExtendedMaterial>>,
-    time: Res<Time>,
-    mut time_since_change: Local<f32>,
-    mut time_of_day: Local<TimeOfDay>,
-) {
-    // Change the color every second
-    *time_since_change += time.delta_seconds();
-    if *time_since_change < 1.0 {
-        return;
-    }
-    *time_since_change = 0.0;
-
-    *time_of_day = time_of_day.next();
-    for handle in models.iter() {
-        let material = materials.get_mut(handle).unwrap();
-        material.extension = WindWakerShaderBuilder::default()
-            .time_of_day(*time_of_day)
-            .build();
+fn rotate_light(mut q: Query<&mut Transform, With<PointLight>>, time: Res<Time>) {
+    for mut t in q.iter_mut() {
+        t.translation = Vec3::new(
+            time.elapsed_seconds().sin(),
+            0.5,
+            time.elapsed_seconds().cos(),
+        ) * 4.0;
     }
 }

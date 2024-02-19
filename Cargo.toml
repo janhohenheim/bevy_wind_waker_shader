@@ -18,3 +18,4 @@ features = ["png", "bevy_asset", "bevy_pbr", "bevy_gltf"]
 [dev-dependencies.bevy]
 version = "0.13"
 default-features = true
+features = ["multi-threaded", "file_watcher"]
