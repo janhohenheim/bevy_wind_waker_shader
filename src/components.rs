@@ -120,18 +120,18 @@ impl WindWakerShaderBuilder {
     /// Builds the [`WindWakerShader`] with the given settings. Note that after insertion, the shader will be moved into the [`ExtendedMaterial`] of the entity.
     pub fn build(self) -> WindWakerShader {
         let (highlight_hex, shadow_hex) = match (self.time_of_day, self.weather) {
-            (TimeOfDay::Dusk, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Dusk, Weather::Rainy) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Morning, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Morning, Weather::Rainy) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Day, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Day, Weather::Rainy) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Afternoon, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Afternoon, Weather::Rainy) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Evening, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Evening, Weather::Rainy) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Night, Weather::Sunny) => ("FEFEFE", "A1958F"),
-            (TimeOfDay::Night, Weather::Rainy) => ("FEFEFE", "A1958F"),
+            (TimeOfDay::Dusk, Weather::Sunny) => ("A19AA3", "746676"),
+            (TimeOfDay::Dusk, Weather::Rainy) => ("90887A", "746676"),
+            (TimeOfDay::Morning, Weather::Sunny) => ("F0EAE3", "BCB7CB"),
+            (TimeOfDay::Morning, Weather::Rainy) => ("B8BDB8", "9AA494"),
+            (TimeOfDay::Day, Weather::Sunny) => ("FFFFFF", "A39892"),
+            (TimeOfDay::Day, Weather::Rainy) => ("ADBBB7", "8E978D"),
+            (TimeOfDay::Afternoon, Weather::Sunny) => ("D8C37F", "B09070"),
+            (TimeOfDay::Afternoon, Weather::Rainy) => ("999187", "888177"),
+            (TimeOfDay::Evening, Weather::Sunny) => ("8D8C9A", "7E7885"),
+            (TimeOfDay::Evening, Weather::Rainy) => ("8E877D", "7A7368"),
+            (TimeOfDay::Night, Weather::Sunny) => ("879EB5", "5D6E99"),
+            (TimeOfDay::Night, Weather::Rainy) => ("4B6690", "4C595A"),
         };
         let highlight_color = self
             .override_highlight_color
@@ -153,6 +153,7 @@ impl WindWakerShaderBuilder {
 /// Note that this does not have to correspond to any actual time settings in your game.
 /// Rather, think of this as "mood categories" that you can use to set the color palette.
 #[derive(Debug, Clone, Copy, Default)]
+#[allow(missing_docs)]
 pub enum TimeOfDay {
     Dusk,
     Morning,
@@ -167,6 +168,7 @@ pub enum TimeOfDay {
 /// Note that this does not have to correspond to any actual weather settings in your game.
 /// Rather, think of this as "mood categories" that you can use to set the color palette.
 #[derive(Debug, Clone, Copy, Default)]
+#[allow(missing_docs)]
 pub enum Weather {
     #[default]
     Sunny,
