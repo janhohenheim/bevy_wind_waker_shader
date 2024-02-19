@@ -29,10 +29,6 @@ fn fragment(
 ) -> FragmentOutput {
     var pbr_input = pbr_input_from_standard_material(in, is_front);
 
-    // remove texture
-    let texture = pbr_input.material.base_color;
-    pbr_input.material.base_color = vec4<f32>(1.0, 1.0, 1.0, 1.0);
-
     // alpha discard
     pbr_input.material.base_color = alpha_discard(pbr_input.material, pbr_input.material.base_color);
 
@@ -40,14 +36,19 @@ fn fragment(
     // in deferred mode we can't modify anything after that, as lighting is run in a separate fullscreen shader.
     let out = deferred_output(in, pbr_input);
 #else
+
+    // remove texture
+    let texture = pbr_input.material.base_color;
+    pbr_input.material.base_color = vec4<f32>(1.0, 1.0, 1.0, 1.0);
+
     var out: FragmentOutput;
     out.color = apply_pbr_lighting(pbr_input);
 
     // Source for cel shading: https://www.youtube.com/watch?v=mnxs6CR6Zrk]
     // sample mask at the current fragment's intensity as u to get the cutoff
     let uv = vec2<f32>(out.color.r, 0.0);
-    let toon_light = textureSample(mask, mask_sampler, uv);
-    out.color = mix(shadow_color, highlight_color, toon_light);
+    let quantization = textureSample(mask, mask_sampler, uv);
+    out.color = mix(shadow_color, highlight_color, quantization);
 
     // apply rim highlights. Inspired by Breath of the Wild: https://www.youtube.com/watch?v=By7qcgaqGI4
     let eye = normalize(view_bindings::view.world_position.xyz - in.world_position.xyz);
@@ -57,6 +58,7 @@ fn fragment(
 
     // Reapply texture
     out.color = out.color * texture;
+    pbr_input.material.base_color = texture;
 
     // apply in-shader post processing (fog, alpha-premultiply, and also tonemapping, debanding if the camera is non-hdr)
     // note this does not include fullscreen postprocessing effects like bloom.
