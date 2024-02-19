@@ -1,6 +1,6 @@
 [package]
 name = "bevy_wind_waker_shader"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jan Hohenheim <jan@hohenheim.ch>"]
 edition = "2021"
 exclude = ["./assets/"]
