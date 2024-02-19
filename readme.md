@@ -47,7 +47,7 @@ use bevy::prelude::*;
 use bevy_wind_waker_shader::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
         .add_plugins((DefaultPlugins, WindWakerShaderPlugin::default()))
         .add_systems(Startup, spawn_character)
         .run();
@@ -57,12 +57,12 @@ fn spawn_character(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SceneBundle {
             scene: asset_server.load("models/Fox.glb"),
-                ..default()
-            },
-            WindWakerShaderBuilder::default()
-                .time_of_day(TimeOfDay::Afternoon)
-                .weather(Weather::Sunny)
-                .build(),
+            ..default()
+        },
+        WindWakerShaderBuilder::default()
+            .time_of_day(TimeOfDay::Afternoon)
+            .weather(Weather::Sunny)
+            .build(),
     ));
 }
 ```
