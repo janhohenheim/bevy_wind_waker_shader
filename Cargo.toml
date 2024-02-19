@@ -15,10 +15,6 @@ version = "0.13"
 default-features = false
 features = ["png", "bevy_asset", "bevy_pbr", "bevy_gltf"]
 
-[[example]]
-name = "basic"
-path = "examples/basic.rs"
-
 [dev-dependencies.bevy]
 version = "0.13"
 default-features = true

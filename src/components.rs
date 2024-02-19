@@ -164,6 +164,20 @@ pub enum TimeOfDay {
     Night,
 }
 
+impl TimeOfDay {
+    /// Returns the next time of day in the cycle.
+    pub fn next(self) -> Self {
+        match self {
+            TimeOfDay::Dusk => TimeOfDay::Morning,
+            TimeOfDay::Morning => TimeOfDay::Day,
+            TimeOfDay::Day => TimeOfDay::Afternoon,
+            TimeOfDay::Afternoon => TimeOfDay::Evening,
+            TimeOfDay::Evening => TimeOfDay::Night,
+            TimeOfDay::Night => TimeOfDay::Dusk,
+        }
+    }
+}
+
 /// The weather used for the color palette in the [`WindWakerShaderBuilder`].
 /// Note that this does not have to correspond to any actual weather settings in your game.
 /// Rather, think of this as "mood categories" that you can use to set the color palette.
