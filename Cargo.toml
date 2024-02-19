@@ -6,7 +6,7 @@ edition = "2021"
 exclude = ["assets"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/janhohenheim/bevy_wind_waker_shader"
-description = "A shader that looks like the one used for characters in The Legend of Zelda: The Wind Waker"
+description = "A toon shader that looks like the one used for characters in The Legend of Zelda: The Wind Waker"
 keywords = ["bevy", "shader", "zelda", "toon", "wind-waker"]
 categories = ["game-development"]
 
