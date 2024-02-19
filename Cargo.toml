@@ -1,7 +1,24 @@
 [package]
 name = "bevy_wind_waker_shader"
 version = "0.1.0"
+authors = ["Jan Hohenheim <jan@hohenheim.ch>"]
 edition = "2021"
+exclude = ["assets"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/janhohenheim/bevy_wind_waker_shader"
+description = "A shader that looks like the one used for characters in The Legend of Zelda: The Wind Waker"
+keywords = ["bevy", "shader", "zelda", "toon", "wind-waker"]
+categories = ["game-development"]
 
 [dependencies.bevy]
 version = "0.13"
+default-features = false
+features = ["png", "bevy_asset", "bevy_pbr", "bevy_gltf"]
+
+[[example]]
+name = "basic"
+path = "examples/basic.rs"
+
+[dev-dependencies.bevy]
+version = "0.13"
+default-features = true

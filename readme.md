@@ -1,4 +1,7 @@
+
 # Wind Waker Shader
+[![crates.io](https://img.shields.io/crates/v/bevy_wind_waker_shader)](https://crates.io/crates/bevy_wind_waker_shader)
+[![docs.rs](https://docs.rs/bevy_wind_waker_shader/badge.svg)](https://docs.rs/bevy_wind_waker_shader)
 
 A shader that looks like the one used for characters in The Legend of Zelda: The Wind Waker. 
 The main code is taken from the ideas presented in [this video](https://www.youtube.com/watch?v=mnxs6CR6Zrk).
@@ -43,3 +46,9 @@ fn spawn_character(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 ```
+
+## Compatibility
+| bevy | bevy_wind_waker_shader |
+|------|------------------------|
+| 0.13 | 0.1                    |
+
