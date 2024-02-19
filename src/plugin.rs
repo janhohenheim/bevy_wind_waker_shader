@@ -9,6 +9,7 @@ use bevy::prelude::{Image, Shader};
 use bevy::render::render_asset::RenderAssetUsages;
 use bevy::render::texture::{CompressedImageFormats, ImageSampler, ImageType};
 
+/// Plugin for the Wind Waker shader.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct WindWakerShaderPlugin;
 
