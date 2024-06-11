@@ -38,9 +38,9 @@ impl Plugin for WindWakerShaderPlugin {
             render_asset_usages,
         )
         .unwrap();
-        app.world
+        app.world_mut()
             .resource_mut::<Assets<Image>>()
-            .insert(TEXTURE_HANDLE, img);
+            .insert(TEXTURE_HANDLE.id(), img);
 
         app.add_plugins(MaterialPlugin::<crate::ExtendedMaterial>::default())
             .add_systems(
