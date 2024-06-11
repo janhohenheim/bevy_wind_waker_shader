@@ -1,6 +1,6 @@
 use bevy::asset::{Asset, Handle};
 use bevy::pbr::{MaterialExtension, StandardMaterial};
-use bevy::prelude::{Color, Component, Image, Reflect, Shader};
+use bevy::prelude::*;
 use bevy::render::render_resource::{AsBindGroup, ShaderRef};
 
 pub(crate) const SHADER_HANDLE: Handle<Shader> = Handle::weak_from_u128(4_326_875_112_478_868_553);
@@ -21,13 +21,13 @@ pub struct WindWakerShader {
     mask: Handle<Image>,
     /// The parts of the model that are facing the light source and are not in shadow.
     #[uniform(102)]
-    pub highlight_color: Color,
+    pub highlight_color: LinearRgba,
     /// The parts of the model that are not facing the light source and are in shadow.
     #[uniform(103)]
-    pub shadow_color: Color,
+    pub shadow_color: LinearRgba,
     /// The color of the edge of the model, which gets a slight specular highlight to make the model pop.
     #[uniform(104)]
-    pub rim_color: Color,
+    pub rim_color: LinearRgba,
 }
 
 impl Default for WindWakerShader {
@@ -135,16 +135,16 @@ impl WindWakerShaderBuilder {
         };
         let highlight_color = self
             .override_highlight_color
-            .unwrap_or_else(|| Color::hex(highlight_hex).unwrap());
+            .unwrap_or_else(|| Srgba::hex(highlight_hex).unwrap().into());
         let shadow_color = self
             .override_shadow_color
-            .unwrap_or_else(|| Color::hex(shadow_hex).unwrap());
+            .unwrap_or_else(|| Srgba::hex(shadow_hex).unwrap().into());
         let rim_color = self.override_rim_color.unwrap_or(Color::WHITE);
         WindWakerShader {
             mask: TEXTURE_HANDLE.clone(),
-            highlight_color,
-            shadow_color,
-            rim_color,
+            highlight_color: highlight_color.into(),
+            shadow_color: shadow_color.into(),
+            rim_color: rim_color.into(),
         }
     }
 }
