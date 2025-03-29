@@ -58,10 +58,7 @@ impl MaterialExtension for WindWakerShader {
 ///
 /// fn spawn_with_wind_waker_shader(mut commands: Commands, asset_server: Res<AssetServer>) {
 ///     commands.spawn((
-///         SceneBundle {
-///           scene: asset_server.load("models/Fox.glb"),
-///           ..default()
-///         },
+///         SceneRoot(asset_server.load("models/Fox.glb")),
 ///         WindWakerShaderBuilder::default()
 ///             .time_of_day(TimeOfDay::Afternoon)
 ///             .weather(Weather::Sunny)

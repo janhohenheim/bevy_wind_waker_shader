@@ -59,14 +59,12 @@ fn main() {
 
 fn spawn_character(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
-        SceneBundle {
-            scene: asset_server.load("models/Fox.glb"),
-            ..default()
-        },
+        SceneRoot(asset_server.load("models/Fox.glb")),
         WindWakerShaderBuilder::default()
-            .time_of_day(TimeOfDay::Afternoon)
+            .time_of_day(TimeOfDay::Day)
             .weather(Weather::Sunny)
             .build(),
+
     ));
 }
 ```
@@ -75,5 +73,6 @@ fn spawn_character(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 | bevy        | bevy_wind_waker_shader |
 |-------------|------------------------|
+| 0.15        | 0.3                    |
 | 0.14        | 0.2                    |
 | 0.13        | 0.1                    |

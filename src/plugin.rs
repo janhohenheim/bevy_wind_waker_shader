@@ -4,10 +4,10 @@ use crate::{
 };
 use bevy::app::{App, Plugin, Update};
 use bevy::asset::{load_internal_asset, Assets};
+use bevy::image::{CompressedImageFormats, ImageSampler, ImageType};
 use bevy::pbr::MaterialPlugin;
 use bevy::prelude::{Image, Shader};
 use bevy::render::render_asset::RenderAssetUsages;
-use bevy::render::texture::{CompressedImageFormats, ImageSampler, ImageType};
 
 /// Plugin for the Wind Waker shader.
 #[non_exhaustive]
