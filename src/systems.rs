@@ -1,16 +1,13 @@
 use crate::WindWakerShader;
-use bevy::asset::{Assets, Handle};
-use bevy::pbr::{ExtendedMaterial, StandardMaterial};
-use bevy::prelude::{Commands, Entity, Query, Res, ResMut, Scene, SceneSpawner, With, Without};
-use bevy::scene::SceneInstance;
+use bevy::asset::Assets;
+use bevy::pbr::{ExtendedMaterial, MeshMaterial3d, StandardMaterial};
+use bevy::prelude::{Commands, Entity, Query, Res, ResMut, SceneSpawner, With, Without};
+use bevy::scene::{SceneInstance, SceneRoot};
 
 /// Source: https://github.com/bevyengine/bevy/discussions/8533#discussioncomment-5787519
 pub(crate) fn customize_scene_materials(
-    unloaded_instances: Query<
-        (Entity, Option<&SceneInstance>, &WindWakerShader),
-        With<Handle<Scene>>,
-    >,
-    handles: Query<(Entity, &Handle<StandardMaterial>)>,
+    unloaded_instances: Query<(Entity, Option<&SceneInstance>, &WindWakerShader), With<SceneRoot>>,
+    handles: Query<(Entity, &MeshMaterial3d<StandardMaterial>)>,
     pbr_materials: Res<Assets<StandardMaterial>>,
     scene_manager: Res<SceneSpawner>,
     mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShader>>>,
@@ -32,8 +29,8 @@ pub(crate) fn customize_scene_materials(
                     extension: shader.clone(),
                 });
                 cmds.entity(entity)
-                    .insert(toon_material)
-                    .remove::<Handle<StandardMaterial>>();
+                    .insert(MeshMaterial3d(toon_material))
+                    .remove::<MeshMaterial3d<StandardMaterial>>();
             }
         }
     }
@@ -41,8 +38,8 @@ pub(crate) fn customize_scene_materials(
 
 pub(crate) fn customize_standard_materials(
     with_material: Query<
-        (Entity, &Handle<StandardMaterial>, &WindWakerShader),
-        Without<Handle<Scene>>,
+        (Entity, &MeshMaterial3d<StandardMaterial>, &WindWakerShader),
+        Without<SceneRoot>,
     >,
     mut materials: ResMut<Assets<ExtendedMaterial<StandardMaterial, WindWakerShader>>>,
     pbr_materials: Res<Assets<StandardMaterial>>,
@@ -57,7 +54,7 @@ pub(crate) fn customize_standard_materials(
             extension: shader.clone(),
         });
         cmds.entity(entity)
-            .insert(toon_material)
-            .remove::<Handle<StandardMaterial>>();
+            .insert(MeshMaterial3d(toon_material))
+            .remove::<MeshMaterial3d<StandardMaterial>>();
     }
 }

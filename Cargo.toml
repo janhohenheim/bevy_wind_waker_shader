@@ -1,6 +1,6 @@
 [package]
 name = "bevy_wind_waker_shader"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Jan Hohenheim <jan@hohenheim.ch>"]
 edition = "2021"
 exclude = ["./assets/"]
@@ -11,11 +11,11 @@ keywords = ["bevy", "shader", "zelda", "toon", "wind-waker"]
 categories = ["game-development"]
 
 [dependencies.bevy]
-version = "0.14.0"
+version = "0.15"
 default-features = false
 features = ["png", "bevy_asset", "bevy_pbr", "bevy_gltf"]
 
 [dev-dependencies.bevy]
-version = "0.14.0"
+version = "0.15"
 default-features = true
 features = ["multi_threaded", "file_watcher"]
