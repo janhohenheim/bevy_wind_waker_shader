@@ -1,12 +1,13 @@
-use bevy::asset::{weak_handle, Asset, Handle};
+use bevy::asset::{uuid_handle, Asset, Handle};
 use bevy::pbr::{MaterialExtension, StandardMaterial};
 use bevy::prelude::*;
-use bevy::render::render_resource::{AsBindGroup, ShaderRef};
+use bevy::render::render_resource::AsBindGroup;
+use bevy::shader::ShaderRef;
 
 pub(crate) const SHADER_HANDLE: Handle<Shader> =
-    weak_handle!("ddeed264-efde-495e-9159-4ac3db07f9f8");
+    uuid_handle!("ddeed264-efde-495e-9159-4ac3db07f9f8");
 pub(crate) const TEXTURE_HANDLE: Handle<Image> =
-    weak_handle!("1af26f3e-5605-4723-a036-dc83f357c7d8");
+    uuid_handle!("1af26f3e-5605-4723-a036-dc83f357c7d8");
 
 /// The type of the material that will be inserted for you after you insert the [`WindWakerShader`] via the [`WindWakerShaderBuilder`] into an entity.
 pub type ExtendedMaterial = bevy::pbr::ExtendedMaterial<StandardMaterial, WindWakerShader>;
