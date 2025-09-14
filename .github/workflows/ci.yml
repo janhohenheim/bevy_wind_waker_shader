@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: "true"
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
@@ -27,7 +27,7 @@ jobs:
       - name: Cache Cargo build files
         uses: Leafwing-Studios/cargo-cache@v1
       - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev
       - name: Run cargo clippy
         run: cargo clippy --tests --examples
 
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: "true"
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
@@ -52,18 +52,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-D warnings"
-      RUSTDOCFLAGS: '--deny warnings'
+      RUSTDOCFLAGS: "--deny warnings"
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: "true"
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
       - name: Cache Cargo build files
         uses: Leafwing-Studios/cargo-cache@v1
       - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev
       - name: Run cargo doc
         run: cargo doc --no-deps --all-features
 
@@ -72,14 +72,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: "true"
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
       - name: Cache Cargo build files
         uses: Leafwing-Studios/cargo-cache@v1
       - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev
       - name: Run cargo test
         run: cargo test --all-features
       - name: Run doc tests
