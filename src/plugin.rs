@@ -2,12 +2,12 @@ use crate::{
     components::{WindWakerShader, SHADER_HANDLE, TEXTURE_HANDLE},
     systems::{customize_scene_materials, customize_standard_materials},
 };
-use bevy::app::{App, Plugin, Update};
+use bevy::app::{App, Plugin};
+use bevy::asset::RenderAssetUsages;
 use bevy::asset::{load_internal_asset, Assets};
 use bevy::image::{CompressedImageFormats, ImageSampler, ImageType};
 use bevy::pbr::MaterialPlugin;
-use bevy::prelude::{Image, Shader};
-use bevy::render::render_asset::RenderAssetUsages;
+use bevy::prelude::*;
 
 /// Plugin for the Wind Waker shader.
 #[non_exhaustive]
@@ -37,14 +37,18 @@ impl Plugin for WindWakerShaderPlugin {
             sampler,
             render_asset_usages,
         )
-        .unwrap();
+        // Safety: This is a known valid image. If this fails, the plugin fundamentally cannot function.
+        .expect("Failed to load internal image.");
+
         app.world_mut()
             .resource_mut::<Assets<Image>>()
-            .insert(TEXTURE_HANDLE.id(), img);
+            .insert(TEXTURE_HANDLE.id(), img)
+            // Safety: will never error for UUID handles
+            .unwrap();
 
         app.add_plugins(MaterialPlugin::<crate::ExtendedMaterial>::default())
             .add_systems(
-                Update,
+                PreUpdate,
                 (customize_scene_materials, customize_standard_materials),
             )
             .register_type::<WindWakerShader>();

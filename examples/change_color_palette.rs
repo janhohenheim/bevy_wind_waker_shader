@@ -1,4 +1,4 @@
-use bevy::core_pipeline::fxaa::Fxaa;
+use bevy::anti_alias::fxaa::Fxaa;
 use bevy::prelude::*;
 use bevy_wind_waker_shader::prelude::*;
 
