@@ -16,11 +16,11 @@
 }
 #endif
 
-@group(2) @binding(100) var mask: texture_2d<f32>;
-@group(2) @binding(101) var mask_sampler: sampler;
-@group(2) @binding(102) var<uniform> highlight_color: vec4<f32>;
-@group(2) @binding(103) var<uniform> shadow_color: vec4<f32>;
-@group(2) @binding(104) var<uniform> rim_color: vec4<f32>;
+@group(3) @binding(100) var mask: texture_2d<f32>;
+@group(3) @binding(101) var mask_sampler: sampler;
+@group(3) @binding(102) var<uniform> highlight_color: vec4<f32>;
+@group(3) @binding(103) var<uniform> shadow_color: vec4<f32>;
+@group(3) @binding(104) var<uniform> rim_color: vec4<f32>;
 
 @fragment
 fn fragment(

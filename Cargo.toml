@@ -11,9 +11,12 @@ keywords = ["bevy", "shader", "zelda", "toon", "wind-waker"]
 categories = ["game-development"]
 
 [dependencies.bevy]
-version = "0.17.0-rc"
+# Need to depend on `main` until <https://github.com/bevyengine/bevy/pull/20993> lands
+version = "0.17.0-dev"
+git = "https://github.com/bevyengine/bevy"
 default-features = false
 features = ["png", "bevy_asset", "bevy_pbr", "bevy_gltf"]
 
 [dev-dependencies.bevy]
-version = "0.17.0-rc"
+version = "0.17.0-dev"
+git = "https://github.com/bevyengine/bevy"
