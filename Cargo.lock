@@ -1414,7 +1414,7 @@ dependencies = [
 
 [[package]]
 name = "bevy_wind_waker_shader"
-version = "0.5.0-rc.0"
+version = "0.5.0-dev"
 dependencies = [
  "bevy",
 ]
